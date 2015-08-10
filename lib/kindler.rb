@@ -35,11 +35,11 @@ module Kindler
       @author = options[:author] || 'unknown'
       @mobi_type = options[:mobi_type] || :simple
       @cover = options[:cover] || ""
-      @silent = options[:silent]
       @pages = []
       @local_images = []
       @pages_by_section = {}
       @style = options[:style] || ''
+      @kindlegen_options = ''
       raise KindlerError.new("must provide the book title ") unless title
     end
 
@@ -112,7 +112,7 @@ module Kindler
 
     def kindlegen
       debug 'begin generate mobi'
-      cmd = "kindleGen #{Shellwords.escape(tmp_dir)}/#{Shellwords.escape(title)}.opf #{@silent ? "> /dev/null" : ""}"
+      cmd = "kindleGen #{Shellwords.escape(tmp_dir)}/#{Shellwords.escape(title)}.opf #{@kindlegen_options}"
       system(cmd)
     end
 
