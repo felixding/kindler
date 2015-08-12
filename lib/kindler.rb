@@ -39,6 +39,7 @@ module Kindler
       @local_images = []
       @pages_by_section = {}
       @style = options[:style] || ''
+      @kindlegen_path = 'kindlegen'
       @kindlegen_options = ''
       raise KindlerError.new("must provide the book title ") unless title
     end
@@ -61,6 +62,13 @@ module Kindler
 
     def add_article(options={})
       add_page(options)
+    end
+
+    #
+    # add files to self.pages, so we can generate ocf/ncx/contents.html later
+    # see self.sectionize_pages for reference
+    #
+    def add_file file_path, section = nil
     end
 
     def generate
@@ -104,15 +112,15 @@ module Kindler
     # make sure kindlegen is installed
     # you can use "sudo brew install " to install it
     def check_kindlegen
-      unless system('kindleGen')
-        at_exit { puts "You don't seem to have kindleGen executable present in your system. See README for details." }
+      unless system(@kindlegen_path)
+        at_exit { puts "Can not find kindlegen executable file at path #{@kindlegen_path}" }
         exit
       end
     end
 
     def kindlegen
       debug 'begin generate mobi'
-      cmd = "kindleGen #{Shellwords.escape(tmp_dir)}/#{Shellwords.escape(title)}.opf #{@kindlegen_options}"
+      cmd = "#{@kindlegen_path} #{Shellwords.escape(tmp_dir)}/#{Shellwords.escape(title)}.opf #{@kindlegen_options}"
       system(cmd)
     end
 
