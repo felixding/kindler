@@ -19,8 +19,8 @@
     <% end %>
   </metadata>
   <manifest>
-    <% pages.each_with_index do |page,index|%>
-      <item href='<%= (index+1).to_s.rjust(3,'0') %>.html' media-type='application/xhtml+xml' id='<%= (index+1).to_s.rjust(3,'0') %>'/>
+    <% pages.each do |page|%>
+      <item href='<%= page[:file_name] %>' media-type='application/xhtml+xml' id='<%= Digest::MD5.new.update page[:file_name] %>'/>
     <% end %>
     <item href="cover-image.jpg" id="cover-image" media-type="image/jpeg" />
     <item href='contents.html' media-type='application/xhtml+xml' id='contents'/>
@@ -28,8 +28,8 @@
   </manifest>
   <spine toc='nav-contents'>
     <itemref idref='contents'/>
-    <% pages.each_with_index do |page,index| %>
-      <itemref idref='<%= (index+1).to_s.rjust(3,'0') %>'/>
+    <% pages.each do |page| %>
+      <itemref idref='<%= Digest::MD5.new.update page[:file_name] %>'/>
     <% end %>
   </spine>
   <guide>

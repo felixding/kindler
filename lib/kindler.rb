@@ -50,7 +50,7 @@ module Kindler
       page[:wrap] ||= true
       page[:section] ||= DEFAULT_SECTION
       page[:count] = pages.count + 1
-      page[:file_name] = "#{page[:count].to_s.rjust(3,'0')}.html"
+      page[:file_name] ||= "#{page[:count].to_s.rjust(3,'0')}.html"
       page[:author] = '' unless page[:author]
       # escape special chars
       page[:title] = CGI::escapeHTML(page[:title])
@@ -73,17 +73,13 @@ module Kindler
 
     def generate
       check_kindlegen
-      make_generated_dirs
-      localize_images if @keep_image
       prepare_conver_img
       # reorder count index
       if magzine?
         sectionize_pages
       end
-      generate_toc
-      generate_opf
-      generate_ncx
-      write_to_disk
+      #raise self.pages.inspect
+      prepare_meta_files
       kindlegen
     end
 
@@ -95,7 +91,7 @@ module Kindler
       self.pages = pages_by_section.values.flatten
       self.pages.each_with_index do |page,index|
         page[:count] = index + 1
-        page[:file_name] = "#{page[:count].to_s.rjust(3,'0')}.html"
+        #page[:file_name] = "#{page[:count].to_s.rjust(3,'0')}.html"
       end
     end
 
@@ -215,11 +211,6 @@ module Kindler
       end
     end
 
-    # html file path
-    def file_path(file_name)
-      "#{tmp_dir}/#{file_name}"
-    end
-
     # wrap readable contents with in html format
     def html_wrap(page)
       template = ERB.new(open(File.join(File.dirname(__FILE__),"templates/page.html.erb")).read)
@@ -228,7 +219,8 @@ module Kindler
 
     # the dir path to generated files
     def tmp_dir
-      File.expand_path (@output_dir == '' ? "#{TMP_DIR_PREFIX}#{title}" : @output_dir)
+      #File.expand_path (@output_dir == '' ? "#{TMP_DIR_PREFIX}#{title}" : @output_dir)
+      @output_dir
     end
 
     # 1. using imagemagick to crop a image to 600*800
@@ -248,22 +240,13 @@ module Kindler
       FileUtils.mkdir_p tmp_dir unless File.exist?(tmp_dir)
     end
 
-    def write_to_disk
-      File.open("#{tmp_dir}/nav-contents.ncx",'wb') { |f| f.write @ncx }
-      File.open(file_path('contents.html'),'wb') {|f| f.write @toc }
-      File.open("#{tmp_dir}/#{title}.opf",'wb') {|f| f.write @opf}
-      # make html files
-      files_count = 1
-      pages.each do |page|
-        File.open(file_path(page[:file_name]),'wb') do |f|
-          content_to_write = page[:wrap] ? html_wrap(page) : page[:content]
-          debug "here is the page #{page[:title]} need to write"
-          debug content_to_write
-          f.write content_to_write
-        end
-        files_count += 1
-      end
-
+    def prepare_meta_files
+      generate_toc
+      generate_opf
+      generate_ncx
+      File.open("#{@output_dir}/nav-contents.ncx",'wb') { |f| f.write @ncx }
+      File.open("#{@output_dir}/contents.html",'wb') {|f| f.write @toc }
+      File.open("#{@output_dir}/#{title}.opf",'wb') {|f| f.write @opf}
     end
 
     def debug(str)
