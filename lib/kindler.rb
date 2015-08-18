@@ -29,6 +29,7 @@ module Kindler
     # @option keep_image [Boolean] whether keep images, default to true
     def initialize(options={})
       @output_dir = options[:output_dir] || ''
+      @output_filename = options[:output_filename] || 'latest.mobi'
       @keep_image = options[:keep_image] || true
       @debug = options[:debug]
       @title = options[:title] || ''
@@ -64,16 +65,8 @@ module Kindler
       add_page(options)
     end
 
-    #
-    # add files to self.pages, so we can generate ocf/ncx/contents.html later
-    # see self.sectionize_pages for reference
-    #
-    def add_file file_path, section = nil
-    end
-
     def generate
       check_kindlegen
-      prepare_conver_img
       # reorder count index
       if magzine?
         sectionize_pages
@@ -116,7 +109,7 @@ module Kindler
 
     def kindlegen
       debug 'begin generate mobi'
-      cmd = "#{@kindlegen_path} #{Shellwords.escape(tmp_dir)}/#{Shellwords.escape(title)}.opf #{@kindlegen_options}"
+      cmd = "#{@kindlegen_path} #{Shellwords.escape(tmp_dir)}/#{Shellwords.escape(title)}.opf #{@kindlegen_options} -o #{@output_filename}"
       system(cmd)
     end
 
