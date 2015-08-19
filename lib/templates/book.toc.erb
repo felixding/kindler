@@ -4,12 +4,13 @@
     <title>Table of Contents</title>
   </head>
   <body>
-    <h1>Contents</h1>
-    <h4>Main section</h4>
-    <ul>
-      <% pages.each do |page| %>
-        <li><a href='<%= page[:file_name] %>'><%= page[:title] %></a></li>
-      <% end %>
-    </ul>
+    <% @pages_by_section.each do |section, pages| %>
+      <h1><%= section %></h1>
+      <ul>
+        <% pages.each do |page| %>
+          <li><a href='<%= page[:file_name] %>'><%= page[:title] %></a></li>
+        <% end %>
+      </ul>
+    <% end %>
   </body>
 </html>

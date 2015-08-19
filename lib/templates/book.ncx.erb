@@ -23,7 +23,7 @@
 
         <% @pages_by_section.each do |section,pages| %>
           <% next if pages.count==0 %>
-          <navPoint playOrder="<%= play_order %>" class="section" id="<%= section %>">
+          <navPoint playOrder="<%= play_order %>" class="section" id="<%= section.gsub(' ', '') %>">
             <navLabel>
               <text><%= section %></text>
             </navLabel>
