@@ -65,14 +65,16 @@ module Kindler
       add_page(options)
     end
 
-    def generate
+    def generate_meta_files
       check_kindlegen
-      # reorder count index
       if magzine?
         sectionize_pages
       end
-      #raise self.pages.inspect
+
       prepare_meta_files
+    end
+    def generate
+      generate_meta_files
       kindlegen
     end
 

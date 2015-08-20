@@ -1,10 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
-<package xmlns="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="<%= title %>">
-  <metadata>
-    <meta content="cover-image" name="cover"/>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uuid_id" version="2.0">
+  <metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:calibre="http://calibre.kovidgoyal.net/2009/metadata" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <meta content="cover" name="cover"/>
+    <meta name="calibre:publication_type" content="periodical:ZenReads:ZenReads"/>
     <dc-metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
       <dc:title><%= title %></dc:title>
-      <dc:language>en-gb</dc:language>
+      <dc:language>en-us</dc:language>
       <dc:creator><%= author %></dc:creator>
       <dc:publisher><%= author %></dc:publisher>
       <dc:subject><%= title %></dc:subject>
@@ -22,7 +24,7 @@
     <% pages.each do |page|%>
       <item href='<%= page[:file_name] %>' media-type='application/xhtml+xml' id='<%= Digest::MD5.new.update page[:file_name] %>'/>
     <% end %>
-    <item href="cover-image.jpg" id="cover-image" media-type="image/jpeg" />
+    <item href="cover.jpg" id="cover" media-type="image/jpeg" />
     <item href='contents.html' media-type='application/xhtml+xml' id='contents'/>
     <item href='nav-contents.ncx' media-type='application/x-dtbncx+xml' id='nav-contents'/>
   </manifest>
@@ -33,6 +35,6 @@
     <% end %>
   </spine>
   <guide>
-    <reference href="cover-image.jpg" type="cover" title="Cover"/>
+    <reference href="cover.jpg" type="cover" title="Cover"/>
   </guide>
 </package>
