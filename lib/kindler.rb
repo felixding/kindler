@@ -66,7 +66,6 @@ module Kindler
     end
 
     def generate_meta_files
-      check_kindlegen
       if magzine?
         sectionize_pages
       end
@@ -75,6 +74,7 @@ module Kindler
     end
     def generate
       generate_meta_files
+      check_kindlegen
       kindlegen
     end
 
